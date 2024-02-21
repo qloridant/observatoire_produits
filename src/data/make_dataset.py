@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
 import click
 import logging
+import off_connector
+from elefan_connector import ElefanConnector
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
 
 
 @click.command()
-@click.argument('input_filepath', type=click.Path(exists=True))
-@click.argument('output_filepath', type=click.Path())
-def main(input_filepath, output_filepath):
+def main():
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
     """
     logger = logging.getLogger(__name__)
-    logger.info('making final data set from raw data')
+    logger.info('Récuperation de la liste des codes barres de l epicerie')
+    nos_produits = ElefanConnector.get_products()
+    logger.info('Récuperation des données Open Food Facts'
+                'disponibles pour cette liste')
+    products = off_connector.get_products(nos_produits)
 
 
 if __name__ == '__main__':
