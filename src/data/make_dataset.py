@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import click
 import logging
-import off_connector
+from off_connector import OFFConnector
 from elefan_connector import ElefanConnector
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
@@ -14,10 +14,10 @@ def main():
     """
     logger = logging.getLogger(__name__)
     logger.info('Récuperation de la liste des codes barres de l epicerie')
-    nos_produits = ElefanConnector.get_products()
+    nos_produits = ElefanConnector().extract_products_codes()
     logger.info('Récuperation des données Open Food Facts'
                 'disponibles pour cette liste')
-    products = off_connector.get_products(nos_produits)
+    products = OFFConnector().get_products_facts(nos_produits)
 
 
 if __name__ == '__main__':
