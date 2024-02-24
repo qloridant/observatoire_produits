@@ -3,5 +3,5 @@ from abc import ABC
 
 class EpicerieConnector(ABC):
 
-    def get_products():
+    def extract_products_codes():
         pass
