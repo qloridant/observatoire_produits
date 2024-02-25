@@ -1,40 +1,42 @@
 from epicerie_connector import EpicerieConnector
-import mariadb
 import sys
 import os
 import dotenv
+import sqlalchemy
 
 project_dir = os.path.join(os.path.dirname(__file__), os.pardir)
-dotenv_path = os.path.join(project_dir, '.env')
+dotenv_path = os.path.join(project_dir, ".env")
 dotenv.load_dotenv(dotenv_path)
 
 
 class ElefanConnector(EpicerieConnector):
-
     def __init__(self) -> None:
         super().__init__()
 
     def _connect(self):
-        # Connect to MariaDB Platform
-        print(os.environ.get('DB_USERNAME'))
+        # Connect to a DB
+        print(os.environ.get("DB_USERNAME"))
         try:
-            conn = mariadb.connect(
-                user=os.environ.get('DB_USERNAME'),
-                password=os.environ.get('DB_PASSWORD'),
-                host=os.environ.get('DB_HOST'),
-                port=int(os.environ.get('DB_PORT')),
-                database=os.environ.get('DB_NAME')
+            engine = sqlalchemy.create_engine(
+                f"mysql+pymysql://"
+                f"{os.environ.get('DB_USERNAME')}:{os.environ.get('DB_PASSWORD')}"
+                f"@{os.environ.get('DB_HOST')}/{os.environ.get('DB_NAME')}?charset=utf8mb4"
             )
-        except mariadb.Error as e:
+        except sqlalchemy.exc as e:
             print(f"Error connecting to MariaDB Platform: {e}")
             sys.exit(1)
 
-        # Get Cursor
-        return conn.cursor()
-    
+        return engine
+
     def extract_products_codes(self):
-        cur = self._connect()
-        cur.execute("SELECT code FROM kaso.ARTICLE")
-        codes = [row[0] for row in cur]
+        engine = self._connect()
+        with engine.connect() as con:
+            result = con.execute(sqlalchemy.text("SELECT code FROM kaso.ARTICLE"))
+            codes = [row[0] for row in result]
         return codes
 
+    def load_products_facts(self):
+        engine = self._connect()
+
+        if len(self.products_facts):
+            self.products_facts.to_sql("ARTICLE_FACTS", engine, if_exists="replace")

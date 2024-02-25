@@ -7,7 +7,6 @@ logger = logging.getLogger(__name__)
 
 
 class OFFConnector:
-
     def __init__(self) -> None:
         self.products_facts = []
         self.api = openfoodfacts.API()
@@ -15,7 +14,7 @@ class OFFConnector:
     def get_product_fact(self, barcode):
         try:
             product = self.api.product.get(barcode, fields=["code", "product_name"])
-            logger.info(f"Product found for url : " "https://world.openfoodfacts.net/api/v2/product/{barcode}")
+            logger.info(f"Product found for url : https://world.openfoodfacts.net/api/v2/product/{barcode}")
         except requests.exceptions.HTTPError as e:
             logger.info(e)
             return None
@@ -33,12 +32,14 @@ class OFFConnector:
             x = i
             chunk = barcodes[x : x + step]
             for barcode in chunk:
-                if number_of_requests == 99:
+                if number_of_requests == 9:
                     logger.info("Waiting 60 seconds...")
                     time.sleep(60)
                     number_of_requests = 0
 
                 # A valid barcode is likely to have at least 10 digits
                 if len(str(barcode)) >= 10:
-                    self.products_facts.append(self.get_product_fact(barcode))
+                    product_fact = self.get_product_fact(barcode)
+                    if product_fact:
+                        self.products_facts.append(product_fact)
                     number_of_requests += 1
