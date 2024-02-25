@@ -3,6 +3,23 @@ observatoire_produits
 
 Mieux connaitre les produits d'une épicerie grâce à la BDD d'Open Food Facts
 
+--------
+
+## Global installation
+
+1. Run `sudo apt-get install libmariadb3 libmariadb-dev`
+1. Intall the python packages with `pip install -r requirements.txt`
+1. Run `python src/data/make_dataset.py`
+
+### Details for l'Elefan connector
+L Elefan connector reads the barcodes of the products sold at l'Elefan in its MariaDB database (`kaso.ARTICLE`). It will then export the facts in this same database, in the table `kaso.ARTICLE_FACTS`.
+
+1. You need to provide the connection information of the DB in the `.env` file
+1. Your DB needs to have write privileges on the user you will use for the table  `kaso.ARTICLE_FACTS`
+1. Your DB needs to have read privileges on the user you will use for the table  `kaso.ARTICLE`
+   
+
+
 Project Organization
 ------------
 
@@ -39,8 +56,3 @@ Project Organization
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 
 
---------
-
-## Installation
-
-1. `sudo apt-get install libmariadb3 libmariadb-dev`
