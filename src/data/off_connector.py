@@ -1,3 +1,4 @@
+import openfoodfacts
 import logging
 import requests
 import time
@@ -5,22 +6,20 @@ import time
 logger = logging.getLogger(__name__)
 
 
-def get_product_fact(barcode):
-    try:
-        response = requests.get(f'https://world.openfoodfacts.net/api/v2/product/{barcode}')
-        response.raise_for_status()
-        product = response.json()
-        logger.info(f'Product found for url : https://world.openfoodfacts.net/api/v2/product/{barcode}')
-    except requests.exceptions.HTTPError as e:
-        logger.info(e)
-        return None
-    return product
-
-
-class OFFConnector():
+class OFFConnector:
 
     def __init__(self) -> None:
         self.products_facts = []
+        self.api = openfoodfacts.API()
+
+    def get_product_fact(self, barcode):
+        try:
+            product = self.api.product.get(barcode, fields=["code", "product_name"])
+            logger.info(f"Product found for url : " "https://world.openfoodfacts.net/api/v2/product/{barcode}")
+        except requests.exceptions.HTTPError as e:
+            logger.info(e)
+            return None
+        return product
 
     def get_products_facts(self, barcodes):
         """
@@ -32,15 +31,14 @@ class OFFConnector():
         number_of_requests = 0
         for i in range(start, end, step):
             x = i
-            chunk = barcodes[x:x+step]
-            for product_code in chunk:
+            chunk = barcodes[x : x + step]
+            for barcode in chunk:
                 if number_of_requests == 99:
-                    logger.info('Waiting 60 seconds...')
+                    logger.info("Waiting 60 seconds...")
                     time.sleep(60)
                     number_of_requests = 0
-            
-                # A valid barcode is likely to have at least 10 digits
-                if len(str(product_code)) >= 10:
-                    self.products_facts.append(get_product_fact(product_code))
-                    number_of_requests += 1
 
+                # A valid barcode is likely to have at least 10 digits
+                if len(str(barcode)) >= 10:
+                    self.products_facts.append(self.get_product_fact(barcode))
+                    number_of_requests += 1
