@@ -7,7 +7,6 @@ Mieux connaitre les produits d'une épicerie grâce à la BDD d'Open Food Facts
 
 ## Global installation
 
-1. Run `sudo apt-get install libmariadb3 libmariadb-dev`
 1. Intall the python packages with `pip install -r requirements.txt`
 1. Run `python src/data/make_dataset.py`
 
