@@ -32,7 +32,7 @@ class OFFConnector:
             x = i
             chunk = barcodes[x : x + step]
             for barcode in chunk:
-                if number_of_requests == 9:
+                if number_of_requests == 99:
                     logger.info("Waiting 60 seconds...")
                     time.sleep(60)
                     number_of_requests = 0
