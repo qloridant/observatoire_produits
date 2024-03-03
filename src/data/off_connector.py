@@ -10,7 +10,19 @@ logger = logging.getLogger(__name__)
 # https://world.openfoodfacts.net/api/v2/product/3017620429484
 
 
-FACTS_TO_EXPORT = ["code", "product_name"]
+FACTS_TO_EXPORT = [
+    "code",
+    "product_name",
+    "image_url",
+    "categories",
+    "brands",
+    "labels",
+    "origins",
+    "packaging",
+    "nutriscore_grade",
+    "ecoscore_grade",
+    "nova_groups_tags",
+]
 
 
 class OFFConnector:
