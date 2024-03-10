@@ -20,7 +20,7 @@ Ce projet récupère la liste des articles vendus dans une épicerie puis ajoute
 1. Installer les packages python `pip install -r requirements.txt`
 1. Run `python src/data/make_dataset.py`
 
-### Avec Docker
+### Avec Docker 🐳 
 
 1. Installer docker
 1. Configurer les variables d'environnement dans un fichier `.env` (voir `.env.EXEMPLE`)
