@@ -1,35 +1,46 @@
-observatoire_produits
+Observatoire des Produits
 ==============================
 
-Mieux connaitre les produits d'une épicerie grâce à la BDD d'Open Food Facts
+Connaitre les produits d'une épicerie grâce à la BDD d'Open Food Fact. Ce projet a été initié par l'épicerie participative [l'Elefan](https://lelefan.org/).
 
---------
+## Fonctionnement
 
-## Global installation
+Ce projet récupère la liste des articles vendus dans une épicerie puis ajoute à ces articles des données issues d'Open Food Facts. 
+![](https://static.openfoodfacts.org/images/logos/off-logo-horizontal-light.svg)
 
-1. Intall the python packages with `pip install -r requirements.txt`
+1. **Récupération des articles vendus dans une épicerie :** Le connecteur Epicerie permet de faire un appel a une API qui renvoi une liste de code barres. Il est possible d'ajouter un connecteur spécifique à son épicerie
+1. **Récupération des données Open Food Facts :** Les données sont récupéres via l'API d'OFF, en limitant les appels a 100 requêtes/min. Les codes barres sont filtrés en amont pour limiter les requêtes aux codes barres valides (13 digits)
+1. **Sauvegarde des articles avec les *facts* : ** Les données sont sauvegardées dans une base de donnée fournie par l'épicerie. Le connecteur par défaut propose de sauvergarder ces données dans une MariaDB. Une copie est sauvegardée en `.csv` dans le dossier `data`.
+
+## Installation globale
+
+### En local
+
+1. Configurer les variables d'environnement dans le fichier `.env`
+1. Installer les packages python `pip install -r requirements.txt`
 1. Run `python src/data/make_dataset.py`
 
-### Details for l'Elefan connector
-L Elefan connector reads the barcodes of the products sold at l'Elefan in its MariaDB database (`kaso.ARTICLE`). It will then export the facts in this same database, in the table `kaso.ARTICLE_FACTS`.
+### Avec Docker
 
-1. You need to provide the connection information of the DB in the `.env` file
-1. Your DB needs to have write privileges on the user you will use for the table  `kaso.ARTICLE_FACTS`
-1. Your DB needs to have read privileges on the user you will use for the table  `kaso.ARTICLE`
-   
+1. Installer docker
+1. Configurer les variables d'environnement dans le fichier `.env`
+1. Build the image within the directory : `sudo docker build --pull -f "Dockerfile" -t observatoireproduits:latest "."`
+1. Run `sudo docker run --network="host" -it observatoireproduits:latest` ou `sudo docker run --network="host" -it observatoireproduits:latest` si vous voulez sauvegarder les données sur une base MariaDB hebergée sur votre 
+
+### Détails du connecteur l'Elefan
+![](https://lelefan.org/wp-content/uploads/2021/02/Lelefan-Logo-long-72@2x.png) 
+
+* Récupération des produits à la vente : Depuis son [API](https://produits.lelefan.org/api/).
+* Sauvegarde : Dans sa base de donnée MariaDb
 
 
-Project Organization
+Organisation
 ------------
 
     ├── LICENSE
     ├── Makefile           <- Makefile with commands like `make data` or `make train`
     ├── README.md          <- The top-level README for developers using this project.
-    ├── data
-    │   ├── external       <- Data from third party sources.
-    │   ├── interim        <- Intermediate data that has been transformed.
-    │   ├── processed      <- The final, canonical data sets for modeling.
-    │   └── raw            <- The original, immutable data dump.
+    ├── data               <- Local export 
     │
     ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
     │
