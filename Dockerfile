@@ -10,7 +10,9 @@ RUN apt-get install -y git
 RUN git clone https://github.com/qloridant/observatoire_produits
 
 # Install requirements
-RUN cd observatoire_produits && pip install -r requirements.txt
+RUN cd observatoire_produits && pip install -r requirements.txt && mkdir data
+
+WORKDIR /observatoire_produits
 
 # Import environnement variables
 COPY .env observatoire_produits/.env
