@@ -16,14 +16,14 @@ Ce projet récupère la liste des articles vendus dans une épicerie puis ajoute
 
 ### En local
 
-1. Configurer les variables d'environnement dans le fichier `.env`
+1. Configurer les variables d'environnement dans le fichier `.env` (voir `.env.EXEMPLE`)
 1. Installer les packages python `pip install -r requirements.txt`
 1. Run `python src/data/make_dataset.py`
 
 ### Avec Docker
 
 1. Installer docker
-1. Configurer les variables d'environnement dans le fichier `.env`
+1. Configurer les variables d'environnement dans un fichier `.env` (voir `.env.EXEMPLE`)
 1. Build the image within the directory : `sudo docker build --pull -f "Dockerfile" -t observatoireproduits:latest "."`
 1. Run `sudo docker run --network="host" -it observatoireproduits:latest` ou `sudo docker run --network="host" -it observatoireproduits:latest` si vous voulez sauvegarder les données sur une base MariaDB hebergée sur votre 
 
