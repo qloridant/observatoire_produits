@@ -1,3 +1,7 @@
+
+> [!IMPORTANT]  
+> Projet transféré sur [github de l'Elefan](https://github.com/elefan-grenoble/observatoire_produits)
+
 Observatoire des Produits
 ==============================
 
